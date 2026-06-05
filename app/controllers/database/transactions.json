@@ -1,0 +1,27 @@
+[
+    {
+        "tipo": "entrada",
+        "descricao": "pix",
+        "valor": 1000.0
+    },
+    {
+        "tipo": "saida",
+        "descricao": "roupas",
+        "valor": 200.0
+    },
+    {
+        "tipo": "entrada",
+        "descricao": "pix",
+        "valor": 100.0
+    },
+    {
+        "tipo": "entrada",
+        "descricao": "pix",
+        "valor": 50.0
+    },
+    {
+        "tipo": "saida",
+        "descricao": "lanche",
+        "valor": 50.0
+    }
+]

@@ -3,27 +3,67 @@ from bottle import template
 class Application():
 
     def __init__(self):
-        # O dicionário mapeia o nome da página (string) para o método da classe
+
         self.pages = {
             'helper': self.helper,
-            'pagina': self.pagina_customizada  # Chave usada na rota /projeto
+            'pagina': self.pagina_customizada,
+
+            # Autenticação
+            'login': self.login,
+            'cadastro': self.cadastro,
+
+            # Sistema
+            'dashboard': self.dashboard,
+            'entradas': self.entradas,
+            'saidas': self.saidas,
+            'fixas': self.fixas,
+            'transacoes': self.transacoes,
+            'cofre': self.cofre
         }
 
     def render(self, page):
-        """
-        Busca o método no dicionário 'pages'. 
-        Se não encontrar a chave, carrega o 'helper' por padrão.
-        """
-        content = self.pages.get(page, self.helper)
+
+        content = self.pages.get(
+            page,
+            self.helper
+        )
+
         return content()
 
+
     def helper(self):
-        """Renderiza o template de ajuda (exemplo da sala de aula)."""
         return template('app/views/html/helper')
 
+
     def pagina_customizada(self):
-        """
-        Renderiza a sua página personalizada para o nível BMVC I.
-        Certifique-se de que o arquivo 'pagina.tpl' existe em app/views/html/
-        """
         return template('app/views/html/pagina')
+
+
+    def login(self):
+        return template('app/views/html/login')
+
+    def cadastro(self):
+        return template('app/views/html/cadastro')
+
+    def dashboard(self, saldo=0, transacoes=[]):
+
+        return template(
+        'app/views/html/dashboard',
+        saldo=saldo,
+        transacoes=transacoes
+    )
+
+    def entradas(self):
+        return template('app/views/html/entradas')
+
+    def saidas(self):
+        return template('app/views/html/saidas')
+
+    def fixas(self):
+        return template('app/views/html/fixas')
+
+    def transacoes(self):
+        return template('app/views/html/transacoes')
+
+    def cofre(self):
+        return template('app/views/html/cofre')

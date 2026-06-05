@@ -1,0 +1,170 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #f2f4f8;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+/* ==========================
+   TOPO
+========================== */
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 20px;
+}
+
+.topbar h1 {
+    color: #1f4e79;
+}
+
+.btn-logout {
+    background: #d9534f;
+    color: white;
+    text-decoration: none;
+
+    padding: 10px 20px;
+
+    border-radius: 8px;
+}
+
+/* ==========================
+   GRID PRINCIPAL
+========================== */
+
+.dashboard {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr 1fr;
+
+    grid-template-areas:
+        "entradas resumo saidas"
+        "fixas grafico grafico"
+        "gastos cofre cofre";
+
+    gap: 20px;
+}
+
+/* ==========================
+   CARDS
+========================== */
+
+.card {
+
+    background: white;
+
+    border-radius: 20px;
+
+    padding: 20px;
+
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.card h2 {
+    margin-bottom: 15px;
+}
+
+.card p {
+    margin-bottom: 15px;
+    color: #666;
+}
+
+/* ==========================
+   ÁREAS
+========================== */
+
+.entradas {
+    grid-area: entradas;
+}
+
+.resumo {
+    grid-area: resumo;
+    text-align: center;
+}
+
+.saidas {
+    grid-area: saidas;
+}
+
+.fixas {
+    grid-area: fixas;
+}
+
+.grafico {
+    grid-area: grafico;
+    min-height: 350px;
+}
+
+.gastos {
+    grid-area: gastos;
+}
+
+.cofre {
+    grid-area: cofre;
+}
+
+/* ==========================
+   BOTÕES
+========================== */
+
+a {
+
+    display: inline-block;
+
+    margin-top: 10px;
+
+    padding: 10px 15px;
+
+    background: #1f4e79;
+
+    color: white;
+
+    text-decoration: none;
+
+    border-radius: 8px;
+
+    transition: 0.2s;
+}
+
+a:hover {
+    opacity: 0.9;
+}
+
+/* ==========================
+   GRÁFICOS
+========================== */
+
+.resumo canvas {
+    max-height: 220px;
+}
+
+.grafico canvas {
+    max-height: 280px;
+}
+
+/* ==========================
+   TRANSAÇÕES
+========================== */
+
+.gastos ul {
+
+    list-style: none;
+
+    margin-top: 10px;
+}
+
+.gastos li {
+
+    padding: 8px 0;
+
+    border-bottom: 1px solid #eee;
+}
