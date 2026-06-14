@@ -1,18 +1,8 @@
 [
     {
-        "tipo": "entrada",
-        "descricao": "pix",
-        "valor": 1000.0
-    },
-    {
         "tipo": "saida",
         "descricao": "roupas",
-        "valor": 200.0
-    },
-    {
-        "tipo": "entrada",
-        "descricao": "pix",
-        "valor": 100.0
+        "valor": 1500.0
     },
     {
         "tipo": "entrada",
@@ -23,5 +13,20 @@
         "tipo": "saida",
         "descricao": "lanche",
         "valor": 50.0
+    },
+    {
+        "tipo": "saida",
+        "descricao": "algo",
+        "valor": 500.0
+    },
+    {
+        "tipo": "entrada",
+        "descricao": "valor",
+        "valor": 1000.0
+    },
+    {
+        "tipo": "saida",
+        "descricao": "roupas",
+        "valor": 200.0
     }
 ]

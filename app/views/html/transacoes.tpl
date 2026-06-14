@@ -16,21 +16,38 @@
             <th>Tipo</th>
             <th>Descrição</th>
             <th>Valor</th>
+            <th>Ações</th>
         </tr>
 
-        <tr>
-            <td>1</td>
-            <td>Entrada</td>
-            <td>Salário</td>
-            <td>R$ 3000</td>
-        </tr>
+        % for i, t in enumerate(transacoes):
 
         <tr>
-            <td>2</td>
-            <td>Saída</td>
-            <td>Mercado</td>
-            <td>R$ 350</td>
+
+            <td>{{i}}</td>
+
+            <td>{{t["tipo"]}}</td>
+
+            <td>{{t["descricao"]}}</td>
+
+            <td>R$ {{t["valor"]}}</td>
+
+            <td>
+
+                <a href="/editar_transacao/{{i}}">
+                    Editar
+                </a>
+
+                |
+
+                <a href="/excluir_transacao/{{i}}">
+                    Excluir
+                </a>
+
+            </td>
+
         </tr>
+
+        % end
 
     </table>
 

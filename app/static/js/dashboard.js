@@ -11,14 +11,12 @@ new Chart(pizza, {
         labels: [
             "Entradas",
             "Saídas",
-            "Cofre"
         ],
 
         datasets: [{
             data: [
-                6000,
+                2000,
                 1200,
-                300
             ]
         }]
     },
@@ -53,9 +51,9 @@ new Chart(linha, {
                 1000,
                 2500,
                 1800,
-                4000,
-                3700,
-                4500
+                2000,
+                1700,
+                2500
             ],
 
             tension: 0.4

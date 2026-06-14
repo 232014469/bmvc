@@ -16,9 +16,8 @@ class Application():
             'dashboard': self.dashboard,
             'entradas': self.entradas,
             'saidas': self.saidas,
-            'fixas': self.fixas,
             'transacoes': self.transacoes,
-            'cofre': self.cofre
+
         }
 
     def render(self, page):
@@ -59,11 +58,6 @@ class Application():
     def saidas(self):
         return template('app/views/html/saidas')
 
-    def fixas(self):
-        return template('app/views/html/fixas')
 
     def transacoes(self):
         return template('app/views/html/transacoes')
-
-    def cofre(self):
-        return template('app/views/html/cofre')

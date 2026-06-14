@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 
 <head>
 
-    <title>Dashboard</title>
+    <meta charset="UTF-8">
+
+    <title>Dashboard Financeiro</title>
 
     <link rel="stylesheet" href="/static/css/dashboard.css">
 
@@ -21,10 +23,10 @@
 
     </div>
 
+    <!-- PRIMEIRA LINHA -->
     <div class="dashboard">
 
-        <!-- Entradas -->
-
+        <!-- ENTRADAS -->
         <div class="card entradas">
 
             <h2>Entradas</h2>
@@ -37,8 +39,7 @@
 
         </div>
 
-        <!-- Saldo -->
-
+        <!-- SALDO -->
         <div class="card resumo">
 
             <h2>Saldo Atual</h2>
@@ -49,8 +50,7 @@
 
         </div>
 
-        <!-- Saídas -->
-
+        <!-- SAÍDAS -->
         <div class="card saidas">
 
             <h2>Saídas</h2>
@@ -63,22 +63,12 @@
 
         </div>
 
-        <!-- Saídas Fixas -->
+    </div>
 
-        <div class="card fixas">
+    <!-- SEGUNDA LINHA -->
+    <div class="bottom-row">
 
-            <h2>Saídas Fixas</h2>
-
-            <p>Contas recorrentes.</p>
-
-            <a href="/fixas">
-                Gerenciar
-            </a>
-
-        </div>
-
-        <!-- Gráfico -->
-
+        <!-- GRÁFICO -->
         <div class="card grafico">
 
             <h2>Gráfico Financeiro</h2>
@@ -87,46 +77,29 @@
 
         </div>
 
-        <!-- Transações -->
-
+        <!-- ÚLTIMAS TRANSAÇÕES -->
         <div class="card gastos">
 
             <h2>Últimas Transações</h2>
 
             <ul>
 
-            % for t in transacoes:
+                % for t in transacoes:
 
                 <li>
-
-                    {{t["tipo"]}}
+                    <strong>{{t["tipo"]}}</strong>
                     -
                     {{t["descricao"]}}
                     -
-                R$ {{t["valor"]}}
+                    R$ {{t["valor"]}}
+                </li>
 
-            </li>
-
-            % end
+                % end
 
             </ul>
 
             <a href="/transacoes">
                 Ver Todas
-            </a>
-
-        </div>
-
-        <!-- Cofre -->
-
-        <div class="card cofre">
-
-            <h2>Cofre</h2>
-
-            <p>Reserva financeira.</p>
-
-            <a href="/cofre">
-                Acessar Cofre
             </a>
 
         </div>

@@ -1,6 +1,4 @@
 from app.controllers.application import Application
-import json
-import os
 
 from bottle import (
     Bottle,
@@ -17,8 +15,14 @@ from app.controllers.auth import (
     login_user
 )
 
+from app.models.transacao_manager import (
+    TransacaoManager
+)
+
 app = Bottle()
 ctl = Application()
+
+manager = TransacaoManager()
 
 # ARQUIVOS ESTÁTICOS
 
@@ -38,9 +42,7 @@ def login():
 def cadastro():
     return ctl.render('cadastro')
 
-
 # DASHBOARD
-
 
 @app.route('/dashboard')
 def dashboard():
@@ -50,52 +52,13 @@ def dashboard():
     if not user:
         redirect('/login')
 
-    # Transações
-    caminho = "app/controllers/database/transactions.json"
-
-    if os.path.exists(caminho):
-        with open(caminho, "r", encoding="utf-8") as arquivo:
-            try:
-                transacoes = json.load(arquivo)
-            except:
-                transacoes = []
-    else:
-        transacoes = []
-
-    saldo = 0
-
-    for t in transacoes:
-
-        if t["tipo"] == "entrada":
-            saldo += float(t["valor"])
-
-        elif t["tipo"] == "saida":
-            saldo -= float(t["valor"])
-
-    # Saídas fixas
-    caminho_fixas = "app/controllers/database/fixed_expenses.json"
-
-    if os.path.exists(caminho_fixas):
-        with open(caminho_fixas, "r", encoding="utf-8") as arquivo:
-            try:
-                fixas = json.load(arquivo)
-            except:
-                fixas = []
-    else:
-        fixas = []
-
-    for fixa in fixas:
-        saldo -= float(fixa["valor"])
-
     return template(
         "app/views/html/dashboard",
-        saldo=saldo,
-        transacoes=transacoes[-5:]
+        saldo=manager.calcular_saldo(),
+        transacoes=manager.listar()[-5:]
     )
 
-
 # ENTRADAS
-
 
 @app.route('/entradas')
 def entradas():
@@ -114,38 +77,15 @@ def salvar_entrada():
     descricao = request.forms.get('descricao')
     valor = float(request.forms.get('valor'))
 
-    caminho = "app/controllers/database/transactions.json"
-
-    if os.path.exists(caminho):
-
-        with open(caminho, "r", encoding="utf-8") as arquivo:
-            try:
-                transacoes = json.load(arquivo)
-            except:
-                transacoes = []
-
-    else:
-        transacoes = []
-
-    transacoes.append({
-        "tipo": "entrada",
-        "descricao": descricao,
-        "valor": valor
-    })
-
-    with open(caminho, "w", encoding="utf-8") as arquivo:
-        json.dump(
-            transacoes,
-            arquivo,
-            indent=4,
-            ensure_ascii=False
-        )
+    manager.adicionar(
+        "entrada",
+        descricao,
+        valor
+    )
 
     redirect('/dashboard')
 
-
 # SAÍDAS
-
 
 @app.route('/saidas')
 def saidas():
@@ -164,106 +104,15 @@ def salvar_saida():
     descricao = request.forms.get('descricao')
     valor = float(request.forms.get('valor'))
 
-    caminho = "app/controllers/database/transactions.json"
-
-    if os.path.exists(caminho):
-
-        with open(caminho, "r", encoding="utf-8") as arquivo:
-            try:
-                transacoes = json.load(arquivo)
-            except:
-                transacoes = []
-
-    else:
-        transacoes = []
-
-    transacoes.append({
-        "tipo": "saida",
-        "descricao": descricao,
-        "valor": valor
-    })
-
-    with open(caminho, "w", encoding="utf-8") as arquivo:
-        json.dump(
-            transacoes,
-            arquivo,
-            indent=4,
-            ensure_ascii=False
-        )
+    manager.adicionar(
+        "saida",
+        descricao,
+        valor
+    )
 
     redirect('/dashboard')
 
-
-# SAÍDAS FIXAS
-
-
-@app.route('/fixas')
-def fixas():
-
-    user = request.get_cookie("user")
-
-    if not user:
-        redirect('/login')
-
-    caminho = "app/controllers/database/fixed_expenses.json"
-
-    if os.path.exists(caminho):
-
-        with open(caminho, "r", encoding="utf-8") as arquivo:
-
-            try:
-                fixas = json.load(arquivo)
-            except:
-                fixas = []
-
-    else:
-        fixas = []
-
-    return template(
-        "app/views/html/fixas",
-        fixas=fixas
-    )
-
-
-@app.post('/salvar_fixa')
-def salvar_fixa():
-
-    descricao = request.forms.get('descricao')
-    valor = float(request.forms.get('valor'))
-
-    caminho = "app/controllers/database/fixed_expenses.json"
-
-    if os.path.exists(caminho):
-
-        with open(caminho, "r", encoding="utf-8") as arquivo:
-
-            try:
-                fixas = json.load(arquivo)
-            except:
-                fixas = []
-
-    else:
-        fixas = []
-
-    fixas.append({
-        "descricao": descricao,
-        "valor": valor
-    })
-
-    with open(caminho, "w", encoding="utf-8") as arquivo:
-
-        json.dump(
-            fixas,
-            arquivo,
-            indent=4,
-            ensure_ascii=False
-        )
-
-    redirect('/fixas')
-
-
 # TRANSAÇÕES
-
 
 @app.route('/transacoes')
 def transacoes():
@@ -273,123 +122,48 @@ def transacoes():
     if not user:
         redirect('/login')
 
-    caminho = "app/controllers/database/transactions.json"
-
-    if os.path.exists(caminho):
-
-        with open(caminho, "r", encoding="utf-8") as arquivo:
-
-            try:
-                lista = json.load(arquivo)
-            except:
-                lista = []
-
-    else:
-        lista = []
-
     return template(
         "app/views/html/transacoes",
-        transacoes=lista
+        transacoes=manager.listar()
     )
 
+# EXCLUIR TRANSAÇÃO
 
-# COFRE
+@app.route('/excluir_transacao/<indice:int>')
+def excluir_transacao(indice):
 
+    manager.excluir(indice)
 
-@app.route('/cofre')
-def cofre():
+    redirect('/transacoes')
 
-    user = request.get_cookie("user")
+# EDITAR TRANSAÇÃO
 
-    if not user:
-        redirect('/login')
-
-    caminho = "app/controllers/database/vault.json"
-
-    if os.path.exists(caminho):
-
-        with open(caminho, "r", encoding="utf-8") as arquivo:
-
-            try:
-                dados = json.load(arquivo)
-            except:
-                dados = {"saldo": 0}
-
-    else:
-        dados = {"saldo": 0}
+@app.route('/editar_transacao/<indice:int>')
+def editar_transacao(indice):
 
     return template(
-        "app/views/html/cofre",
-        saldo=dados["saldo"]
+        "app/views/html/editar_transacao",
+        indice=indice,
+        transacao=manager.obter(indice)
     )
 
+# ATUALIZAR TRANSAÇÃO
 
-@app.post('/depositar_cofre')
-def depositar_cofre():
+@app.post('/atualizar_transacao/<indice:int>')
+def atualizar_transacao(indice):
 
+    descricao = request.forms.get('descricao')
     valor = float(request.forms.get('valor'))
 
-    caminho = "app/controllers/database/vault.json"
+    manager.atualizar(
+        indice,
+        descricao,
+        valor
+    )
 
-    if os.path.exists(caminho):
-
-        with open(caminho, "r", encoding="utf-8") as arquivo:
-
-            try:
-                cofre = json.load(arquivo)
-            except:
-                cofre = {"saldo": 0}
-
-    else:
-        cofre = {"saldo": 0}
-
-    cofre["saldo"] += valor
-
-    with open(caminho, "w", encoding="utf-8") as arquivo:
-
-        json.dump(
-            cofre,
-            arquivo,
-            indent=4
-        )
-
-    redirect('/cofre')
-
-@app.post('/retirar_cofre')
-def retirar_cofre():
-
-    valor = float(request.forms.get('valor'))
-
-    caminho = "app/controllers/database/vault.json"
-
-    if os.path.exists(caminho):
-
-        with open(caminho, "r", encoding="utf-8") as arquivo:
-
-            try:
-                cofre = json.load(arquivo)
-            except:
-                cofre = {"saldo": 0}
-
-    else:
-        cofre = {"saldo": 0}
-
-    cofre["saldo"] -= valor
-
-    with open(caminho, "w", encoding="utf-8") as arquivo:
-
-        json.dump(
-            cofre,
-            arquivo,
-            indent=4
-        )
-
-    redirect('/cofre')
-
-
+    redirect('/transacoes')
 
 # AUTENTICAÇÃO
-
 
 @app.post('/cadastro')
 def cadastrar():
@@ -440,9 +214,7 @@ def logout():
 
     redirect('/login')
 
-
 # SERVIDOR
-
 
 if __name__ == '__main__':
 
